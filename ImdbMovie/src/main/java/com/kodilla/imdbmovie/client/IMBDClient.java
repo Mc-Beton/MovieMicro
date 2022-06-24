@@ -36,6 +36,39 @@ public class IMBDClient {
         return imbdResponse.getItems();
     }
 
+    public List<ImdbMovieDto> getComingSoonImdb() {
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(imbdApiEndpoint +"ComingSoon/" + imbdKey)
+                .build().encode().toUri();
+
+        ResponseDtoImdb imbdResponse = restTemplate.getForObject(url, ResponseDtoImdb.class);
+
+        assert imbdResponse != null;
+        return imbdResponse.getItems();
+    }
+
+    public List<ImdbMovieDto> getTop250Imdb() {
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(imbdApiEndpoint +"Top250Movies/" + imbdKey)
+                .build().encode().toUri();
+
+        ResponseDtoImdb imbdResponse = restTemplate.getForObject(url, ResponseDtoImdb.class);
+
+        assert imbdResponse != null;
+        return imbdResponse.getItems();
+    }
+
+    public List<ImdbMovieDto> getTopTvImdb() {
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(imbdApiEndpoint +"Top250TVs/" + imbdKey)
+                .build().encode().toUri();
+
+        ResponseDtoImdb imbdResponse = restTemplate.getForObject(url, ResponseDtoImdb.class);
+
+        assert imbdResponse != null;
+        return imbdResponse.getItems();
+    }
+
     public ImbdMovieDetailsDto getMovieDetailsImbd(String movieId) {
         URI url = UriComponentsBuilder
                 .fromHttpUrl(imbdApiEndpoint +"Title/" + imbdKey + "/" + movieId)
