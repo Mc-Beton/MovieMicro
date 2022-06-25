@@ -3,7 +3,10 @@ package com.kodilla.imdbmovie.controller;
 import com.kodilla.imdbmovie.domain.ImbdMovieDetailsDto;
 import com.kodilla.imdbmovie.domain.ImdbMovieDto;
 import com.kodilla.imdbmovie.client.IMBDClient;
+import com.kodilla.imdbmovie.utellyService.client.UtellyClient;
+import com.kodilla.imdbmovie.utellyService.domain.LocationWatch;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,5 +50,12 @@ public class ImbdController {
         return ResponseEntity.ok(imbdClient.searchMovies(content));
     }
 
+    @Autowired
+    private UtellyClient utellyClient;
+
+    @GetMapping("/watchmovie/{imdbId}")
+    public ResponseEntity<List<LocationWatch>> getSiteList(@PathVariable String imdbId) {
+        return ResponseEntity.ok(utellyClient.getMovieWatch(imdbId));
+    }
 
 }
