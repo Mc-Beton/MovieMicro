@@ -25,4 +25,10 @@ public class Rating {
 
     @Column(name = "RATE")
     private Integer movieRate;
+
+    public Rating(String movieId, Long userId, Integer movieRate) {
+        this.movieId = movieId;
+        this.userId = userId;
+        this.movieRate = movieRate;
+    }
 }
