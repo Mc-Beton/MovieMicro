@@ -39,6 +39,14 @@ public class UserService {
         userRepository.deleteByUsername(name);
     }
 
+    public List<User> getUserByName(String name) {
+        if(userRepository.findAllByName(name).isPresent()) {
+            return userRepository.findAllByName(name).get();
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
     public void updateUser(UserDto userDto) throws UserNotFoundException {
         Optional<User> user = Optional.ofNullable(getUserById(userDto.getId()));
         if(user.isPresent()) {

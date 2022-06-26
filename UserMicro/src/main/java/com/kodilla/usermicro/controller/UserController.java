@@ -27,6 +27,12 @@ public class UserController {
         return ResponseEntity.ok(userMapper.mapToUserDtoList(users));
     }
 
+    @GetMapping("/all-users/{username}")
+    public ResponseEntity<List<UserDto>> getAllUsersByName(@PathVariable String username) {
+        List<User> users = userService.getUserByName(username);
+        return ResponseEntity.ok(userMapper.mapToUserDtoList(users));
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> makeNewUser(@RequestBody UserDto userDto) {
         User user = userMapper.mapToUserWithId(userDto);
@@ -56,6 +62,11 @@ public class UserController {
     public ResponseEntity<Void> addFriend(@PathVariable Long userId, @PathVariable Long friendId) throws UserNotFoundException {
         userService.addFriend(userId, friendId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/friends/{userId}")
+    public ResponseEntity<List<UserDto>> getFriendList(@PathVariable Long userId) throws UserNotFoundException {
+        return ResponseEntity.ok(userMapper.mapToUserDtoList(userService.findUserFriends(userId)));
     }
 
     @PutMapping(value = "{userId}/addMovieToFav/{movieId}")
