@@ -8,7 +8,9 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -17,7 +19,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "ID")
     private Long id;
 
@@ -41,15 +43,17 @@ public class User {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "FAV_LIST")
-    @ElementCollection
-    private List<String> favoriteList;
+    @Column
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinTable(name = "FAV_LIST", joinColumns = @JoinColumn(name="USER_ID"))
+    private Set<String> favoriteList = new HashSet<String>();
 
     @Column(name = "TO_WATCH_LIST")
-    @ElementCollection
-    private List<String> toWatchList;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinTable(name = "TOWATCH_LIST", joinColumns = @JoinColumn(name="USER_ID"))
+    private Set<String> toWatchList;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "user_friends",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "FRIEND_ID"))

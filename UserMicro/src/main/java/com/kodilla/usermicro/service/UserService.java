@@ -7,8 +7,7 @@ import com.kodilla.usermicro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +33,10 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public void deleteUserByUsername(String name) {
+        userRepository.deleteByUsername(name);
     }
 
     public void updateUser(UserDto userDto) throws UserNotFoundException {
@@ -89,7 +92,32 @@ public class UserService {
             user.get().getFriends().add(friend.get());
             friend.get().getFriends().add(user.get());
             userRepository.save(friend.get());
-            userRepository.save(user.get());
+        } else {
+            throw new UserNotFoundException();
+        }
+    }
+
+    public Set<String> getFavMovieList(Long userId) throws UserNotFoundException {
+        Optional<User> user = Optional.ofNullable(getUserById(userId));
+        if (user.isPresent()) {
+            if (user.get().getFavoriteList().isEmpty()) {
+                return new HashSet<>();
+            } else {
+                return user.get().getFavoriteList();
+            }
+        } else {
+            throw new UserNotFoundException();
+        }
+    }
+
+    public Set<String> getToWatchMovieList(Long userId) throws UserNotFoundException {
+        Optional<User> user = Optional.ofNullable(getUserById(userId));
+        if (user.isPresent()) {
+            if (user.get().getToWatchList().isEmpty()) {
+                return new HashSet<>();
+            } else {
+                return user.get().getToWatchList();
+            }
         } else {
             throw new UserNotFoundException();
         }

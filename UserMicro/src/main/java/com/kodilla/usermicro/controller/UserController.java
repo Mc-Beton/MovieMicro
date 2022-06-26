@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -28,14 +29,14 @@ public class UserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> makeNewUser(@RequestBody UserDto userDto) {
-        User user = userMapper.mapToUser(userDto);
+        User user = userMapper.mapToUserWithId(userDto);
         userService.saveNewUser(user);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping
     public ResponseEntity<Void> editUser(@RequestBody UserDto userDto) {
-        User user = userMapper.mapToUser(userDto);
+        User user = userMapper.mapToUserWithId(userDto);
         userService.saveNewUser(user);
         return ResponseEntity.ok().build();
     }
@@ -67,5 +68,15 @@ public class UserController {
     public ResponseEntity<Void> addMovieToWatch(@PathVariable Long userId, @PathVariable String movieId) throws UserNotFoundException {
         userService.addMovieToFWatch(userId, movieId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/{userId}/favoriteList")
+    public ResponseEntity<Set<String>> getFavoriteList(@PathVariable Long userId) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.getFavMovieList(userId));
+    }
+
+    @GetMapping(value = "/{userId}/toWatchList")
+    public ResponseEntity<Set<String>> getToWatchList(@PathVariable Long userId) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.getToWatchMovieList(userId));
     }
 }

@@ -15,4 +15,16 @@ public class UserDto {
     private String username;
     private String phoneNumber;
     private String email;
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public UserDto(String name, String surname, String username, String phoneNumber, String email) {
+        this.name = name;
+        this.surname = surname;
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
 }
