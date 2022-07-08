@@ -1,7 +1,9 @@
 package com.kodilla.ratingmicro.service;
 
 import com.kodilla.ratingmicro.domain.Rating;
+import com.kodilla.ratingmicro.domain.RatingDto;
 import com.kodilla.ratingmicro.exceptions.RatingNotFoundException;
+import com.kodilla.ratingmicro.mapper.RatingMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ class RatingServiceTest {
 
     @Autowired
     private RatingService ratingService;
+
+    @Autowired
+    private RatingMapper ratingMapper;
 
     @Test
     void addNewRating() throws RatingNotFoundException {
@@ -64,5 +69,46 @@ class RatingServiceTest {
 
         //Clean up
         ratingService.deleteRating(rating.getId());
+    }
+
+    @Test
+    void getRatingDtoDataTest() throws RatingNotFoundException {
+        //Given
+        Rating rating = new Rating("tt1234567", 1L, 6);
+
+        //When
+        ratingService.saveNewRating(rating);
+        Long id = ratingService.getRatingById(rating.getId()).getId();
+        RatingDto ratingDto = ratingMapper.mapToRatingDto(ratingService.getRatingById(id));
+
+        //Then
+        assertEquals(id, ratingDto.getId());
+        assertEquals(rating.getMovieId(), ratingDto.getMovieId());
+        assertEquals(rating.getUserId(), ratingDto.getUserId());
+        assertEquals(rating.getMovieRate(),ratingDto.getRating());
+
+        //Clean up
+        ratingService.deleteRating(id);
+    }
+
+    @Test
+    void mapperShouldReturnTheSame() throws RatingNotFoundException {
+        //Given
+        Rating rating = new Rating("tt1234567", 1L, 6);
+
+        //When
+        ratingService.saveNewRating(rating);
+        Long id = ratingService.getRatingById(rating.getId()).getId();
+        RatingDto ratingDto = ratingMapper.mapToRatingDto(ratingService.getRatingById(id));
+        Rating checkRating = ratingMapper.mapToRating(ratingDto);
+
+        //Then
+        assertEquals(checkRating.getId(), ratingDto.getId());
+        assertEquals(checkRating.getMovieId(), ratingDto.getMovieId());
+        assertEquals(checkRating.getUserId(), ratingDto.getUserId());
+        assertEquals(checkRating.getMovieRate(),ratingDto.getRating());
+
+        //Clean up
+        ratingService.deleteRating(id);
     }
 }
